@@ -19,10 +19,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', function(){
         return view('login');
     })->middleware('guest')->name('login');
-
+    
     Route::get('/login/admin', [AuthenticatedSessionController::class, 'create'])
                 ->middleware('guest')
-                ->name('login.admin');
+                ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
