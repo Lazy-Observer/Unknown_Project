@@ -69,6 +69,8 @@ class CheckoutController extends Controller
         $user->email = $data['email'];
         $user->name = $data['name'];
         $user->occupation = $data['occupation'];
+        $user->phone = $data['phone'];
+        $user->address = $data['address'];
         $user->save();
 
         // create checkout
@@ -134,6 +136,8 @@ class CheckoutController extends Controller
     // Midtrans Handler
     public function getSnapRedirect(Checkout $checkout)
     {
+        $notif = $request->method() == 'POST' ? new Midtrans\Notification() : Midtrans\Transaction::status($request->order_id);
+
         $orderId = $checkout->id.'-'.Str::random(5);
         $price = $checkout->Camp->price * 1000;
 
@@ -179,7 +183,7 @@ class CheckoutController extends Controller
 
         try{
             // Get Snap Payment Page URL
-            $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
+            $paymentUrl = \Midtrans\Snap::createTransaction($midtrans_params)->redirect_url;
             $checkout->midtrans_url = $paymentUrl;
             $checkout->save();
 
